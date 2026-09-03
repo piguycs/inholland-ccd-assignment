@@ -13,7 +13,7 @@
 
   processes = {
     azurite.exec = ''
-      azurite --location .azurite --debug .azurite/debug.log
+      azurite --location .azurite --debug .azurite/debug.log --skipApiVersionCheck
     '';
 
     api.exec = ''
