@@ -57,3 +57,8 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Azurite and other bs
+/.azurite/
+/__blobstorage__/
+/__queuestorage__/
