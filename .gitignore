@@ -3,12 +3,6 @@
 devenv.local.nix
 devenv.local.yaml
 
-# direnv
-.direnv
-
-# pre-commit
-.pre-commit-config.yaml
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -62,3 +56,7 @@ nunit-*.xml
 /.azurite/
 /__blobstorage__/
 /__queuestorage__/
+
+# I open jetbrains once and it spews garbage everywhere
+*.user
+/.idea/

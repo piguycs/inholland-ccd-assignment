@@ -26,7 +26,7 @@ app.MapPost("/generations", async (CancellationToken ct) =>
 
 app.MapGet("/generations/{generationId:guid}/images", async (Guid generationId, CancellationToken ct) =>
 {
-    await images.CreateIfNotExistsAsync();
+    await images.CreateIfNotExistsAsync(cancellationToken: ct);
 
     var imageUrls = new List<string>();
 

@@ -2,6 +2,8 @@
   packages = [
     pkgs.azurite
     pkgs.azure-cli
+    pkgs.bicep
+    pkgs.powershell
   ];
 
   languages = {
