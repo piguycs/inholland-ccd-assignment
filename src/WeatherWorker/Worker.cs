@@ -1,4 +1,5 @@
 using Azure.Storage.Queues;
+using System.Text.Json;
 
 namespace WeatherWorker;
 
@@ -23,7 +24,19 @@ public class Worker(
                 continue;
             }
 
-            logger.LogInformation("Received generation request: {Message}", message.Body.ToString());
+            var request = JsonSerializer.Deserialize<GenerationRequest>(
+                    message.Body.ToString(),
+                    new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+            if (request is null) {
+                logger.LogWarning("Received an invalid generation request");
+                continue;
+            }
+
+            logger.LogInformation(
+                    "Processing generation {GenerationId}, requested at {RequestedAt}",
+                    request.GenerationId,
+                    request.RequestedAt);
 
             await queue.DeleteMessageAsync(message.MessageId, message.PopReceipt, ct);
         }
