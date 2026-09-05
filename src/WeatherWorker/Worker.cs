@@ -10,7 +10,7 @@ public class Worker(
         IHttpClientFactory httpClientFactory,
         ILogger<Worker> logger) : BackgroundService
 {
-    const string BUIENRADAR_ENDPOINT = "https://data.buienradar.nl/2.0/feed/json";
+    private const string BuienradarEndpoint = "https://data.buienradar.nl/2.0/feed/json";
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -48,7 +48,7 @@ public class Worker(
             var client = httpClientFactory.CreateClient();
 
             var feed = await client.GetFromJsonAsync<WeatherFeed>(
-                    BUIENRADAR_ENDPOINT,
+                    BuienradarEndpoint,
                     new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
             var stations = feed?.Actual?.StationMeasurements;
