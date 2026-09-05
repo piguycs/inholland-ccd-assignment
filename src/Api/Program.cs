@@ -12,7 +12,7 @@ var connectionString = builder.Configuration["Storage:ConnectionString"]
 var queue = new QueueClient(connectionString, "generation-requests");
 var images = new BlobContainerClient(connectionString, "generated-images");
 
-app.MapPost("/generations", async (CancellationToken ct) => 
+app.MapPost("/generations", async (CancellationToken ct) =>
 {
     await queue.CreateIfNotExistsAsync(cancellationToken: ct);
 
@@ -36,7 +36,8 @@ app.MapGet("/generations/{generationId:guid}/images", async (Guid generationId, 
             prefix: $"{generationId}/",
             cancellationToken: ct);
 
-    await foreach (var blob in iterator) {
+    await foreach (var blob in iterator)
+    {
         imageUrls.Add(images.GetBlobClient(blob.Name).Uri.AbsolutePath);
     }
 

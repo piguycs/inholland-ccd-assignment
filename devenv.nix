@@ -13,6 +13,10 @@
     };
   };
 
+  scripts.format.exec = ''
+    dotnet format WeatherImages.slnx
+  '';
+
   processes = {
     azurite.exec = ''
       azurite --location .azurite --debug .azurite/debug.log --skipApiVersionCheck

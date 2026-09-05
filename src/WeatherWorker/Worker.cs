@@ -9,7 +9,7 @@ public class Worker(
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        var connectionString = configuration["Storage:ConnectionString"] 
+        var connectionString = configuration["Storage:ConnectionString"]
             ?? throw new InvalidOperationException("Storage:ConnectionString is not configured");
 
         var queue = new QueueClient(connectionString, "generation-requests");
@@ -19,7 +19,8 @@ public class Worker(
             var response = await queue.ReceiveMessageAsync(cancellationToken: ct);
             var message = response.Value;
 
-            if (message is null) {
+            if (message is null)
+            {
                 await Task.Delay(TimeSpan.FromSeconds(1), ct);
                 continue;
             }
@@ -28,7 +29,8 @@ public class Worker(
                     message.Body.ToString(),
                     new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-            if (request is null) {
+            if (request is null)
+            {
                 logger.LogWarning("Received an invalid generation request");
                 continue;
             }
