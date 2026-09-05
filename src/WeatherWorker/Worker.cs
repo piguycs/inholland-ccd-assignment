@@ -18,6 +18,10 @@ public class Worker(
             ?? throw new InvalidOperationException("Storage:ConnectionString is not configured");
 
         var queue = new QueueClient(connectionString, "generation-requests");
+        var imageQueue = new QueueClient(connectionString, "image-processing");
+
+        await queue.CreateIfNotExistsAsync(cancellationToken: ct);
+        await imageQueue.CreateIfNotExistsAsync(cancellationToken: ct);
 
         while (!ct.IsCancellationRequested)
         {
@@ -59,8 +63,21 @@ public class Worker(
                 continue;
             }
 
+            foreach (var station in stations)
+            {
+                var imageRequest = new ImageRequest(
+                        request.GenerationId,
+                        station);
+
+                await imageQueue.SendMessageAsync(
+                        JsonSerializer.Serialize(
+                            imageRequest,
+                            new JsonSerializerOptions(JsonSerializerDefaults.Web)),
+                            cancellationToken: ct);
+            }
+
             logger.LogInformation(
-                    "Fetched {StationCount} weather stations for generation id {GenerationId}",
+                    "Queued {StationCount} messages for generation id {GenerationId}",
                     stations.Count,
                     request.GenerationId);
 
