@@ -1,4 +1,4 @@
-param location string = 'polandcentral'
+param location string = resourceGroup().location
 param namePrefix string = 'kd26'
 
 var environmentName = 'inh-ccd-lab2-env-${namePrefix}'
