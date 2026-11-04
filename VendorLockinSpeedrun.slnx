@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="RequestImage/RequestImage.csproj" />
+</Solution>
