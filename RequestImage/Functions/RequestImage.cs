@@ -1,20 +1,20 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 using RequestImage.Dto;
 
-namespace RequestImage;
+namespace RequestImage.Functions;
 
 public class RequestImage(ILogger<RequestImage> logger)
 {
     [Function(nameof(RequestImage))]
-    public ImageOutput Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+    public ImageOutput Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "images")] HttpRequest req)
     {
         var jobId = Guid.NewGuid();
         const JobStatus status = JobStatus.Pending;
         
-        var response = new ImageResp
+        var response = new ImageQueueMessage
         {
             JobId = jobId,
             Status = status,

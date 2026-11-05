@@ -6,7 +6,7 @@ namespace RequestImage.Dto;
 public record ImageOutput
 {
     [QueueOutput("image-queue")]
-    public required ImageResp QueueMessage { get; init; }
+    public required ImageQueueMessage QueueMessage { get; init; }
 
     [HttpResult]
     public required IActionResult HttpResponse { get; init; }
