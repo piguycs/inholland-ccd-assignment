@@ -14,7 +14,7 @@ public class ProcessImageRequest(ILogger<ProcessImageRequest> logger, HttpClient
     [QueueOutput("image-update-queue")]
     public async Task<IEnumerable<WeatherQueueMessage>> Run([QueueTrigger("image-queue")] ImageQueueMessage message)
     {
-        logger.LogInformation("C# Queue Trigger: job {JobId} with {Status}", message.JobId, message.Status);
+        logger.LogInformation("C# Queue Trigger: job {JobId}", message.JobId);
         
         WeatherInfo? weatherInfo;
         

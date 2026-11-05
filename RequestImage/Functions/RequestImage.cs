@@ -12,15 +12,13 @@ public class RequestImage(ILogger<RequestImage> logger)
     public ImageOutput Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "images")] HttpRequest req)
     {
         var jobId = Guid.NewGuid();
-        const JobStatus status = JobStatus.Pending;
         
         var response = new ImageQueueMessage
         {
             JobId = jobId,
-            Status = status,
         };
         
-        logger.LogInformation("Queuing {JobId} for image request with status {Status}", jobId, status);
+        logger.LogInformation("Queuing {JobId} for image request", jobId);
         
         var location = $"/api/images/{jobId}";
 
