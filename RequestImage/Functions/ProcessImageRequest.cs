@@ -8,7 +8,6 @@ namespace RequestImage.Functions;
 public class ProcessImageRequest(ILogger<ProcessImageRequest> logger, HttpClient httpClient)
 {
     private const string BuienRadarApi = "https://data.buienradar.nl/2.0/feed/json";
-    private static readonly string[] RegionWhitelist = ["Amsterdam", "Rotterdam", "Utrecht"];
     
     [Function(nameof(ProcessImageRequest))]
     [QueueOutput("image-update-queue")]
@@ -30,7 +29,6 @@ public class ProcessImageRequest(ILogger<ProcessImageRequest> logger, HttpClient
         }
 
         var regions = weatherInfo.Actual.StationMeasurements
-            .Where(x => RegionWhitelist.Contains(x.Regio))
             .Select(x => new WeatherQueueMessage
             {
                 ImageJobId = message.JobId,

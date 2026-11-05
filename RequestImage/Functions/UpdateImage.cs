@@ -20,7 +20,8 @@ public class UpdateImage(ILogger<UpdateImage> logger, HttpClient httpClient, IIm
 
         await using var imageStream = await response.Content.ReadAsStreamAsync();
 
-        var text = $"{message.Region}\n{message.Temperature:0.#} °C\n{message.Description}";
+        var temperature = message.Temperature?.ToString("0.#") ?? "--";
+        var text = $"{message.Region}\n{temperature} °C\n{message.Description}";
         var image = imageHelper.AddTextToImage(imageStream, (text, (30, 30), 36, "FFFFFF"));
 
         logger.LogInformation("Created weather image for job {JobId}: {Size} bytes", message.JobId, image.Length);

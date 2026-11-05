@@ -11,5 +11,5 @@ public record StationMeasurements
     public required string WeatherDescription { get; set; }
     
     [JsonPropertyName("temperature")]
-    public float Temperature { get; set; }
+    public float? Temperature { get; set; }
 }

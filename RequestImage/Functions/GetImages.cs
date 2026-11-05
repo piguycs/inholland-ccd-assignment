@@ -3,11 +3,11 @@ using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
+using RequestImage.Dto;
 
 namespace RequestImage.Functions;
 
-public class GetImages(ILogger<GetImages> logger, BlobServiceClient blobServiceClient)
+public class GetImages(BlobServiceClient blobServiceClient)
 {
     private readonly BlobContainerClient _container = blobServiceClient.GetBlobContainerClient("images");
     
@@ -17,25 +17,38 @@ public class GetImages(ILogger<GetImages> logger, BlobServiceClient blobServiceC
     {
         var prefix = $"{imageJobId}/";
 
-        var urls = new List<string>();
+        var cancellationToken = req.HttpContext.RequestAborted;
+        var knownJob = (await _container.GetBlobClient($"_jobs/{imageJobId}")
+            .ExistsAsync(cancellationToken)).Value;
+        var images = new List<ImageResponse>();
+        var expiresAt = DateTimeOffset.UtcNow.AddHours(1);
         
-        await foreach (var blob in _container.GetBlobsAsync(prefix: prefix))
+        await foreach (var blob in _container.GetBlobsAsync(prefix: prefix, cancellationToken: cancellationToken))
         {
             var blobClient = _container.GetBlobClient(blob.Name);
 
             var sasUrl = blobClient.GenerateSasUri(
                 BlobSasPermissions.Read,
-                DateTimeOffset.UtcNow.AddHours(1)
+                expiresAt
             );
             
-            urls.Add(sasUrl.ToString());
+            images.Add(new ImageResponse
+            {
+                Url = sasUrl.ToString(),
+                ExpiresAt = expiresAt
+            });
         }
 
-        if (urls.Count == 0)
+        // Existing images also identify jobs created before acceptance tracking was added.
+        if (!knownJob && images.Count == 0)
         {
             return new NotFoundResult();
         }
 
-        return new OkObjectResult(urls);
+        return new OkObjectResult(new GetImagesResponse
+        {
+            JobId = imageJobId,
+            Images = images
+        });
     }
 }
