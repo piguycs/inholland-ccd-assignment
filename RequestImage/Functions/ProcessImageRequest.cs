@@ -1,14 +1,38 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using RequestImage.Dto;
+using RequestImage.Service;
 
 namespace RequestImage.Functions;
 
-public class ProcessImageRequest(ILogger<ProcessImageRequest> logger)
+public class ProcessImageRequest(ILogger<ProcessImageRequest> logger, IHttpClient httpClient)
 {
+    private const string BuienRadarApi = "https://data.buienradar.nl/2.0/feed/json";
+    private static readonly string[] RegionWhitelist = ["Amsterdam", "Rotterdam", "Utrecht"];
+    
     [Function(nameof(ProcessImageRequest))]
-    public void Run([QueueTrigger("image-queue")] ImageQueueMessage message)
+    [QueueOutput("image-update-queue")]
+    public async Task<IEnumerable<WeatherQueueMessage>> Run([QueueTrigger("image-queue")] ImageQueueMessage message)
     {
         logger.LogInformation("C# Queue Trigger: job {JobId} with {Status}", message.JobId, message.Status);
+
+        var weatherInfo = await httpClient.GetAsync<WeatherInfo>(BuienRadarApi);
+        if (weatherInfo is null)
+        {
+            throw new Exception("Weather Info is null");
+        }
+
+        var regions = weatherInfo.Actual.StationMeasurements
+            .Where(x => RegionWhitelist.Contains(x.Regio))
+            .Select(x => new WeatherQueueMessage
+            {
+                ImageJobId = message.JobId,
+                JobId = Guid.NewGuid(),
+                Region = x.Regio,
+                Temperature = x.Temperature,
+                Description = x.WeatherDescription
+            });
+
+        return regions;
     }
 }
