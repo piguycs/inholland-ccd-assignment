@@ -9,15 +9,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Axion.Azure.Functions.Worker.Extensions.Binding.Azure.Storage.Queues" Version="10.0.5" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0"/>
+        <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0" />
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Blobs" Version="6.8.2" />
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.5.5" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.OpenTelemetry" Version="1.2.0"/>
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.OpenTelemetry" Version="1.2.0" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.20.1" />
         <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.10.0" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.1"/>
+        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.1" />
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.1.0" />
+        <PackageReference Include="SkiaSharp" Version="4.154.0" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.154.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../assets/fonts/DejaVuSans.ttf" Link="Fonts/DejaVuSans.ttf"
+              CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+        <None Include="../LICENSES/DejaVuSans.txt" Link="LICENSES/DejaVuSans.txt"
+              CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
