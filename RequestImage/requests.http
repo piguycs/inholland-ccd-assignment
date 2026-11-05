@@ -1,8 +1,10 @@
 ### Request weather info images
 
-POST http://localhost:7227/api/images
+POST https://weather-image-app.azurewebsites.net/api/images
+x-functions-key: FUNCTIONS-KEY-GOES-HERE
 
 ### Get generated image URLs
 
 // the GUID needs to be from the previous POST request
-GET http://localhost:7227/api/images/f9115771-7199-4082-a66d-ceac896e8983
+GET https://weather-image-app.azurewebsites.net/api/images/84235337-de59-46ab-85ce-f4f3d0a6fd92
+x-functions-key: FUNCTIONS-KEY-GOES-HERE
