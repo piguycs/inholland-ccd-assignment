@@ -1,0 +1,8 @@
+### Request weather info images
+
+POST http://localhost:7227/api/images
+
+### Get generated image URLs
+
+// the GUID needs to be from the previous POST request
+GET http://localhost:7227/api/images/f9115771-7199-4082-a66d-ceac896e8983
